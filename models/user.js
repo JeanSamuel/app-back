@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     User.associate = (models) => {
         User.hasMany(models.Session, { foreignKey: 'userId', as: "sessions" });
         User.belongsTo(models.Group, { foreignKey: 'groupId', as: "group" });
-        User.belongsTo(models.Department, { foreignKey: 'addressId', as: "address" });
+        User.belongsTo(models.Department, { foreignKey: 'departmentId', as: "department" });
         User.belongsTo(models.Contact, { foreignKey: 'contactId', as: "contact" });
     }
     return User;

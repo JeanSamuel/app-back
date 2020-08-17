@@ -4,7 +4,7 @@ import {Controller} from '../controllers/UserController';
 import acl from './acl';
 
 router.post('/auth', Controller.auth);
-router.use(Controller.verify);
+//router.use(Controller.verify);
 router.get('/me', Controller.whoami);
 router.put('/me', Controller.updateMe);
 router.get('/users', acl('A'), Controller.all);

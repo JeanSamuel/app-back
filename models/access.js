@@ -5,7 +5,6 @@ const {
 module.exports = (sequelize, DataTypes) => {
     const Access = sequelize.define("Access", {
         groupId: DataTypes.INTEGER,
-        resourceId: DataTypes.INTEGER,
         accessC: DataTypes.BOOLEAN,
         accessR: DataTypes.BOOLEAN,
         accessU: DataTypes.BOOLEAN,

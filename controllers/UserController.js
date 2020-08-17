@@ -11,7 +11,26 @@ const uidgen = new UIDGenerator(1024);
 
 let User = db.User;
 let Session = db.Session;
-
+let Group = db.Group;
+let Department = db.Department;
+let Contact = db.Contact;
+const userIncludes = [
+    {model: Session, as: 'sessions', required: false, attributes: []},
+    {model: Contact, as: 'contact', required: false, attributes: {exclude: ['createdAt', 'updatedAt']}},
+    {
+        model: Department,
+        as: 'department',
+        required: false,
+        attributes: {exclude: ['id', 'createdAt', 'updatedAt']}
+    },
+    {
+        model: Group,
+        as: 'group',
+        required: true,
+        attributes: {exclude: ['createdAt', 'updatedAt']},
+        include:['accesses']
+    }
+];
 export const Errors = {
     UNAUTHORIZED: new ErrorHandler(401, "USER_UNAUTHORIZED", "Unauthorized"),
     TOKEN_EXPIRED: new ErrorHandler(401, "USER_TOKEN_EXPIRED", "Token expired"),
@@ -29,21 +48,25 @@ const expiresOn = () => {
 }
 
 const mapRow = (row) => {
-    return {
+    let rowM= {
         id: row.id,
         login: row.login,
-        matricule:row.matricule,
+        matricule: row.matricule,
         name: row.name,
         firstname: row.firstname,
         createdAt: row.createdAt,
         updatedAt: row.updatedAt,
         type: row.type,
         nb_sessions: row.get('nb_sessions'),
+        group: row.get('group'),
+        department: row.get('department'),
+        contact: row.get('contact'),
         email: row.email,
         phone: row.phone,
         jobtitle: row.jobtitle,
         active: row.active,
     }
+    return rowM;
 }
 /**
  *
@@ -104,7 +127,7 @@ export const cleanSession = () => {
         }
     }).then(res => {
         console.info(`Cleaned ${res} zombies sessions`);
-    }).catch(err => {
+    }).catch(res => {
         console.error(res);
     })
 }
@@ -253,7 +276,7 @@ export const Controller = {
                     [sequelize.fn('COUNT', sequelize.col('sessions.id')), 'nb_sessions']
                 ]
             },
-            include: [{model: Session, as: 'sessions', required: false, attributes: []}],
+            include: userIncludes,
             group: ["User.id"]
         }).then((rows) => {
             let mapped = rows.map(mapRow);

@@ -5,8 +5,7 @@ export default {
     User: sequelize.Model,
     Group: sequelize.Model,
     Access: sequelize.Model,
-    Resource: sequelize.Model,
     Session: sequelize.Model,
     Department: sequelize.Model,
-    Address: sequelize.Model
+    Contact: sequelize.Model
 }

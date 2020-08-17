@@ -7,24 +7,21 @@ module.exports = (sequelize, DataTypes) => {
         name: DataTypes.STRING,
         firstname: DataTypes.STRING,
         birthday: DataTypes.DATE,
-        birthdayloc: DataTypes.STRING,
-        cin:DataTypes.STRING,
+        jobtitle: DataTypes.STRING,
+        groupId: DataTypes.INTEGER,
+        departmentId: DataTypes.INTEGER,
+        contactId: DataTypes.INTEGER,
         type: {
             type: DataTypes.ENUM,
             values: ['A', 'U']
         },
-        email: DataTypes.STRING,
-        phone: DataTypes.STRING,
-        jobtitle: DataTypes.STRING,
-        groupId: DataTypes.INTEGER,
-        departmentId: DataTypes.INTEGER,
-        addressId: DataTypes.INTEGER,
         active: DataTypes.BOOLEAN
     }, {});
     User.associate = (models) => {
-        User.hasMany(models.Session, {foreignKey: 'userId', as: "sessions"});
-        User.belongsTo(models.Group, {foreignKey: 'groupId', as: "group"});
-        User.belongsTo(models.Department, {foreignKey: 'addressId', as: "address"});
+        User.hasMany(models.Session, { foreignKey: 'userId', as: "sessions" });
+        User.belongsTo(models.Group, { foreignKey: 'groupId', as: "group" });
+        User.belongsTo(models.Department, { foreignKey: 'addressId', as: "address" });
+        User.belongsTo(models.Contact, { foreignKey: 'contactId', as: "contact" });
     }
     return User;
 };

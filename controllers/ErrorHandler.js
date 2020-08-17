@@ -24,7 +24,7 @@ export class ErrorHandler {
      * @returns {any}
      */
     send(res) {
-        return res.status(this.status).json({code: this.code, message: this.message});
+        return res.status(this.status).json({ code: this.code, message: this.message });
     }
 }
 

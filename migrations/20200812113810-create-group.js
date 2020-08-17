@@ -1,6 +1,6 @@
 'use strict';
 module.exports = {
-    up: async (queryInterface, Sequelize) => {
+    up: async(queryInterface, Sequelize) => {
         await queryInterface.createTable('Groups', {
             id: {
                 allowNull: false,
@@ -25,7 +25,7 @@ module.exports = {
             }
         });
     },
-    down: async (queryInterface, Sequelize) => {
+    down: async(queryInterface, Sequelize) => {
         await queryInterface.dropTable('Groups');
     }
 };

@@ -1,10 +1,10 @@
 import db from '../models';
 import bcrypt from 'bcryptjs';
-import {ErrorHandler, GENERIC_ERROR} from './ErrorHandler';
+import { ErrorHandler, GENERIC_ERROR } from './ErrorHandler';
 import UIDGenerator from 'uid-generator';
 import addDate from 'date-fns/add';
 import isBefore from 'date-fns/isBefore';
-import {Op} from 'sequelize';
+import { Op } from 'sequelize';
 import sequelize from 'sequelize';
 
 const uidgen = new UIDGenerator(1024);
@@ -13,8 +13,7 @@ let User = db.User;
 let Session = db.Session;
 
 /**
- *
- * @type {{LOGIN_ALREADY_EXISTS: ErrorHandler, ERROR_UPDATE_TOKEN: ErrorHandler, LOGIN_NOT_FOUND: ErrorHandler, SESSION_NOT_FOUND: ErrorHandler, UNAUTHORIZED: ErrorHandler, USERID_NOT_FOUND: ErrorHandler, ERROR_VERIFY_TOKEN: ErrorHandler, TOKEN_EXPIRED: ErrorHandler}}
+ * 
  */
 export const Errors = {
     UNAUTHORIZED: new ErrorHandler(401, "USER_UNAUTHORIZED", "Unauthorized"),
@@ -27,42 +26,46 @@ export const Errors = {
     LOGIN_ALREADY_EXISTS: new ErrorHandler(409, "LOGIN_ALREADY_EXISTS", "Login already exists"),
 };
 
-/**
- *
- * @returns {Date | *}
- */
+
 const expiresOn = () => {
-    return addDate(new Date(), {hours: 1});
-}
-/**
- *
- * @param row
- * @returns {{createdAt: string | boolean | string | {allowNull: boolean, type}, firstname: unknown.firstname, jobtitle: *, phone: string, name: *, active: boolean | ServiceWorker, id: *, login: string, type: *, email: (string|{type}), updatedAt: string | boolean | string | {allowNull: boolean, type}, nb_sessions: *}}
- */
-const mapRow = (row) => {
-    return {
-        id: row.id,
-        login: row.login,
-        name: row.name,
-        firstname: row.firstname,
-        createdAt: row.createdAt,
-        updatedAt: row.updatedAt,
-        type: row.type,
-        nb_sessions: row.get('nb_sessions'),
-        email: row.email,
-        phone: row.phone,
-        jobtitle: row.jobtitle,
-        active: row.active,
+        return addDate(new Date(), { hours: 1 });
     }
-}
-/**
- *
- * @param login
- * @returns {Promise<unknown>}
- */
+    /**
+     * @param  {} row
+     * @param  {row.id} =>{return{id
+     * @param  {row.login} login
+     * @param  {row.name} name
+     * @param  {row.firstname} firstname
+     * @param  {row.createdAt} createdAt
+     * @param  {row.updatedAt} updatedAt
+     * @param  {row.type} type
+     * @param  {row.get('nb_sessions'} nb_sessions
+     * @returns row
+     */
+const mapRow = (row) => {
+        return {
+            id: row.id,
+            login: row.login,
+            name: row.name,
+            firstname: row.firstname,
+            createdAt: row.createdAt,
+            updatedAt: row.updatedAt,
+            type: row.type,
+            nb_sessions: row.get('nb_sessions'),
+            email: row.email,
+            phone: row.phone,
+            jobtitle: row.jobtitle,
+            active: row.active,
+        }
+    }
+    /**
+     *
+     * @param login
+     * @returns {Promise<unknown>}
+     */
 const getByLogin = (login) => {
     return new Promise((resolve, reject) => {
-        User.findOne({where: {login: login}}).then(row => {
+        User.findOne({ where: { login: login } }).then(row => {
             if (row) {
                 resolve(row);
             } else {
@@ -80,7 +83,7 @@ const getByLogin = (login) => {
  */
 const checkDuplicatedLogin = (login, id = 0) => {
     return new Promise((resolve, reject) => {
-        let where = {login: login};
+        let where = { login: login };
         if (id) {
             where = {
                 ...where,
@@ -89,7 +92,7 @@ const checkDuplicatedLogin = (login, id = 0) => {
                 }
             }
         }
-        User.findOne({where: where}).then(row => {
+        User.findOne({ where: where }).then(row => {
             if (row) {
                 reject(Errors.LOGIN_ALREADY_EXISTS);
             } else {
@@ -126,7 +129,7 @@ export const cleanSession = () => {
  */
 const getById = (id) => {
     return new Promise((resolve, reject) => {
-        User.findOne({where: {id: id}}).then(row => {
+        User.findOne({ where: { id: id } }).then(row => {
             if (row) {
                 resolve(row);
             } else {
@@ -142,21 +145,21 @@ const getById = (id) => {
  * @returns {Promise<User>}
  */
 const getBySession = (token) => {
-    return new Promise((resolve, reject) => {
-        Session.findOne({where: {accessToken: token}, include: ["user"]}).then(row => {
-            if (row)
-                resolve(row);
-            else
-                reject(Errors.SESSION_NOT_FOUND);
-        }).catch(() => {
-            reject(GENERIC_ERROR);
-        });
-    })
-}
-/**
- *
- * @type {{all: Controller.all, whoami: Controller.whoami, disconnect: Controller.disconnect, updateMe: Controller.updateMe, auth: Controller.auth, updateStatus: Controller.updateStatus, verify: Controller.verify, create: Controller.create, update: Controller.update, remove: Controller.remove}}
- */
+        return new Promise((resolve, reject) => {
+            Session.findOne({ where: { accessToken: token }, include: ["user"] }).then(row => {
+                if (row)
+                    resolve(row);
+                else
+                    reject(Errors.SESSION_NOT_FOUND);
+            }).catch(() => {
+                reject(GENERIC_ERROR);
+            });
+        })
+    }
+    /**
+     *
+     * @type {{all: Controller.all, whoami: Controller.whoami, disconnect: Controller.disconnect, updateMe: Controller.updateMe, auth: Controller.auth, updateStatus: Controller.updateStatus, verify: Controller.verify, create: Controller.create, update: Controller.update, remove: Controller.remove}}
+     */
 export const Controller = {
     /**
      *
@@ -197,7 +200,7 @@ export const Controller = {
             })
             .catch(err => {
                 console.error(err);
-                res.status(500).json({message: "An error occured"})
+                res.status(500).json({ message: "An error occured" })
             });
     },
     /**
@@ -212,7 +215,7 @@ export const Controller = {
             return;
         }
         Session.findOne({
-            where: {accessToken: req.headers.authorization.replace('Bearer ', '')},
+            where: { accessToken: req.headers.authorization.replace('Bearer ', '') },
             include: ['user']
         }).then(session => {
             if (!session) {
@@ -229,7 +232,7 @@ export const Controller = {
             }
             req.user = session.user;
             req.session = session;
-            session.update({accessTokenExpires: expiresOn()}).then(() => {
+            session.update({ accessTokenExpires: expiresOn() }).then(() => {
                 next()
             }).catch(err => {
                 Errors.ERROR_UPDATE_TOKEN.send(res);
@@ -263,14 +266,14 @@ export const Controller = {
                     [sequelize.fn('COUNT', sequelize.col('sessions.id')), 'nb_sessions']
                 ]
             },
-            include: [{model: Session, as: 'sessions', required: false, attributes: []}],
+            include: [{ model: Session, as: 'sessions', required: false, attributes: [] }],
             group: ["User.id"]
         }).then((rows) => {
             let mapped = rows.map(mapRow);
             res.json(mapped);
         }).catch(err => {
             console.error(err);
-            res.status(500).json({message: "An error occured"});
+            res.status(500).json({ message: "An error occured" });
         })
     },
     /**
@@ -280,7 +283,7 @@ export const Controller = {
      */
     disconnect: (req, res) => {
         getBySession(req.session.accessToken).then(row => {
-            row.destroy().then(res.json({message: "disconnected"}));
+            row.destroy().then(res.json({ message: "disconnected" }));
         }).catch(err => err.send(res));
     },
     /**
@@ -291,10 +294,10 @@ export const Controller = {
     create: (req, res) => {
         checkDuplicatedLogin(req.body.login).then(() => {
             let pwd = bcrypt.hashSync(req.body.password, 10);
-            User.create({...req.body, password: pwd}).then((row) => {
+            User.create({...req.body, password: pwd }).then((row) => {
                 res.json(row);
             }).catch(err => {
-                res.status(500).json({message: "An error occured"});
+                res.status(500).json({ message: "An error occured" });
             })
         }).catch((err) => {
             err.send(res);
@@ -311,7 +314,7 @@ export const Controller = {
             .then(row => {
                 return row.destroy()
             })
-            .then(() => res.json({message: "User deleted"}))
+            .then(() => res.json({ message: "User deleted" }))
             .catch(err => err.send(res));
     },
 
@@ -327,7 +330,7 @@ export const Controller = {
                 let fields = req.body;
                 if (req.body.password) {
                     let pwd = bcrypt.hashSync(req.body.password, 10);
-                    fields = {...fields, password: pwd};
+                    fields = {...fields, password: pwd };
                 } else {
                     delete fields.password;
                 }
@@ -347,7 +350,7 @@ export const Controller = {
     updateStatus: (req, res) => {
         getById(req.params.id)
             .then(user => {
-                return user.update({active: req.body.active})
+                return user.update({ active: req.body.active })
             })
             .then(user => res.json(user))
             .catch(err => err.send(res));
@@ -361,14 +364,14 @@ export const Controller = {
     updateMe: (req, res) => {
         getBySession(req.session.accessToken)
             .then(row => {
-                let params = {name: req.body.name, firstname: req.body.firstname};
+                let params = { name: req.body.name, firstname: req.body.firstname };
                 if (req.body.password) {
                     if (!row.user.password) {
                         return Errors.UNAUTHORIZED.send(res);
                     }
                     if (bcrypt.compareSync(req.body.password, row.user.password)) {
                         let pwd = bcrypt.hashSync(req.body.new, 10);
-                        params = {password: pwd};
+                        params = { password: pwd };
                     } else {
                         return Errors.UNAUTHORIZED.send(res);
                     }

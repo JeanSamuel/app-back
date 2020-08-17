@@ -5,7 +5,7 @@ module.exports = {
             type: Sequelize.ENUM,
             values: ['A', 'U']
         }).then(() => {
-            queryInterface.bulkUpdate("Users", {type: "A"}, {});
+            queryInterface.bulkUpdate("Users", { type: "A" }, {});
         });
     },
     down: (queryInterface, Sequelize) => {

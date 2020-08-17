@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {});
     Access.associate = (models) => {
         // define association here
-        Access.belongsTo(models.Group, {foreignKey: 'groupId',as: 'group'});
+        Access.belongsTo(models.Group, { foreignKey: 'groupId', as: 'group' });
     }
     return Access;
 };

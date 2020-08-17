@@ -8,12 +8,12 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER
             },
-            login: {
+            matricule: {
                 type: Sequelize.STRING,
                 allowNull: false,
                 unique: true
             },
-            matricule: {
+            login: {
                 type: Sequelize.STRING,
                 allowNull: false,
                 unique: true
@@ -30,12 +30,6 @@ module.exports = {
             },
             birthday: {
                 type: Sequelize.DATE
-            },
-            birthdayloc: {
-                type: Sequelize.STRING
-            },
-            cin: {
-                type: Sequelize.STRING
             }
         });
     },

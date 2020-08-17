@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {});
     Session.associate = (models) => {
         // define association here
-        Session.belongsTo(models.User, {foreignKey: 'userId',as: "user"})
+        Session.belongsTo(models.User, { foreignKey: 'userId', as: "user" })
     }
     return Session;
 };
